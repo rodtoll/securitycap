@@ -1,15 +1,16 @@
 var mailer = require('./mailer.js');
 var securitycap = require('./securitycap.js');
 var restify = require('restify');
+var config = require('../houseconfig.json');
 
 function captureAndSendPic(req, res, next) {
-    var mailClient = new mailer.Mailer('useremail', 'apppassword');
+    var mailClient = new mailer.Mailer(config.emailfrom.username, config.emailfrom.password);
     var capClient = new securitycap.SecurityCap();
 
     capClient.capPicture(0, './ssss.jpeg', function(success, error, filename) {
 	if(success == true) {
 	    mailClient.sendEmail(
-		'address',
+		config.securitycameracapture.notifytarget,
 		'Doorbell Rang',
 		'Doorbell was rung. Below is screen capture from front camera',
 		filename,
